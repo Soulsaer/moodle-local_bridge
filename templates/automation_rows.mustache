@@ -1,0 +1,134 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    Automation table rows.
+
+    @template local_bridge/automation_rows
+
+    Displays automation rows for the automations table.
+
+    Context variables required for this template:
+    * automations - List of automation records.
+    * strings - Localised strings used by the template.
+
+    Example context (json):
+    {
+        "__example": true,
+        "automations": [
+            {
+                "id": 1,
+                "name": "User created webhook",
+                "event": "User created",
+                "endpoint": "https://example.com/webhooks/moodle",
+                "enabled": true,
+                "updated": "06 Sep 2026"
+            }
+        ],
+        "strings": {
+            "updatedat": "Updated",
+            "on": "On",
+            "off": "Off",
+            "editautomation": "Edit automation",
+            "edit": "Edit",
+            "deleteautomation": "Delete automation",
+            "delete": "Delete",
+            "noautomationsfound": "No automations found",
+            "noautomationsdisplay": "There are no automations to display.",
+            "createautomation": "Create automation"
+        }
+    }
+}}
+
+{{#__example}}
+<table>
+    <tbody>
+{{/__example}}
+
+{{#automations}}
+<tr data-automation-row>
+    <td>
+        <div class="local_bridge-name">
+            <span class="local_bridge-mini-icon">
+                <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+            </span>
+            <div>
+                <b>{{name}}</b>
+                <small>{{strings.updatedat}} {{updated}}</small>
+            </div>
+        </div>
+    </td>
+    <td><span class="local_bridge-chip">{{event}}</span></td>
+    <td><code title="{{endpoint}}">{{endpoint}}</code></td>
+    <td>
+        <button type="button"
+                class="local_bridge-switch {{#enabled}}is-on{{/enabled}}"
+                data-action="toggle"
+                data-id="{{id}}"
+                data-enabled="{{enabled}}"
+                role="switch"
+                aria-checked="{{#enabled}}true{{/enabled}}{{^enabled}}false{{/enabled}}">
+            <span></span>
+            <b>{{#enabled}}{{strings.on}}{{/enabled}}{{^enabled}}{{strings.off}}{{/enabled}}</b>
+        </button>
+    </td>
+    <td class="local_bridge-actions">
+        <button type="button"
+                class="btn btn-sm btn-outline-primary local_bridge-table-action"
+                data-action="edit"
+                data-id="{{id}}"
+                aria-label="{{strings.editautomation}}: {{name}}">
+            <i class="bi bi-pencil" aria-hidden="true"></i>
+            <span>{{strings.edit}}</span>
+        </button>
+        <button type="button"
+                class="btn btn-sm btn-outline-danger local_bridge-table-action"
+                data-action="delete"
+                data-id="{{id}}"
+                aria-label="{{strings.deleteautomation}}: {{name}}">
+            <i class="bi bi-trash2" aria-hidden="true"></i>
+            <span>{{strings.delete}}</span>
+        </button>
+    </td>
+</tr>
+{{/automations}}
+
+{{^automations}}
+<tr class="local_bridge-table-empty-row" data-table-empty-row>
+    <td colspan="5">
+        <div class="local_bridge-table-empty-content">
+            <span class="local_bridge-empty-icon">
+                <i class="bi bi-inbox" aria-hidden="true"></i>
+            </span>
+            <h3>{{strings.noautomationsfound}}</h3>
+            <p data-table-empty-message>{{strings.noautomationsdisplay}}</p>
+            <button type="button"
+                    class="btn btn-primary local_bridge-btn local_bridge-btn-primary"
+                    data-action="create"
+                    data-table-empty-create
+                    hidden>
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                {{strings.createautomation}}
+            </button>
+        </div>
+    </td>
+</tr>
+{{/automations}}
+{{#__example}}
+    </tbody>
+</table>
+{{/__example}}

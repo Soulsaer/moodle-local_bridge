@@ -1,0 +1,107 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    Automations view.
+
+    @template local_bridge/automations
+
+    Example context (json):
+    {
+        "strings": {
+            "automations": "Automations",
+            "yourautomations": "Your automations",
+            "automationsdesc": "Simple rules that connect Moodle activity to your services.",
+            "createautomation": "Create automation",
+            "searchautomations": "Search automations...",
+            "clearsearch": "Clear search",
+            "rows": "Rows",
+            "rowsperpage": "Rows per page",
+            "automation": "Automation",
+            "trigger": "Trigger",
+            "destination": "Destination",
+            "status": "Status",
+            "actions": "Actions",
+            "noautomationsfound": "No automations found",
+            "noautomationsdisplay": "There are no automations to display.",
+            "createautomation": "Create automation"
+        },
+        "search": ""
+    }
+}}
+
+<section class="local_bridge-view">
+    <div class="local_bridge-page-head">
+        <div>
+            <span class="local_bridge-kicker">{{strings.automations}}</span>
+            <h1>{{strings.yourautomations}}</h1>
+            <p>{{strings.automationsdesc}}</p>
+        </div>
+        <button type="button" class="btn btn-primary local_bridge-btn local_bridge-btn-primary" data-action="create">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i><span>{{strings.createautomation}}</span>
+        </button>
+    </div>
+
+    <div class="local_bridge-toolbar">
+        <div class="local_bridge-search">
+            <span><i class="bi bi-search" aria-hidden="true"></i></span>
+            <input type="search" data-automation-search placeholder="{{strings.searchautomations}}" aria-label="{{strings.searchautomations}}" value="{{search}}">
+            <button type="button" class="local_bridge-search-clear" data-action="clear-automation-search" aria-label="{{strings.clearsearch}}" hidden>
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <section class="local_bridge-card local_bridge-table-card local_bridge-datatable-card">
+        <div class="local_bridge-datatable-toolbar">
+            <div class="local_bridge-datatable-info" data-table-info></div>
+            <div class="local_bridge-datatable-page-size">
+                <label>{{strings.rows}}
+                    <select data-table-page-size aria-label="{{strings.rowsperpage}}">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+
+        <div class="local_bridge-table-wrap">
+            <table class="table local_bridge-table local_bridge-datatable" data-automation-table>
+                <thead>
+                    <tr>
+                        <th data-sort-key="name"><button type="button" class="local_bridge-th-sort">{{strings.automation}} <i class="bi bi-chevron-expand" aria-hidden="true"></i></button></th>
+                        <th data-sort-key="event"><button type="button" class="local_bridge-th-sort">{{strings.trigger}} <i class="bi bi-chevron-expand" aria-hidden="true"></i></button></th>
+                        <th data-sort-key="endpoint"><button type="button" class="local_bridge-th-sort">{{strings.destination}} <i class="bi bi-chevron-expand" aria-hidden="true"></i></button></th>
+                        <th data-sort-key="enabled"><button type="button" class="local_bridge-th-sort">{{strings.status}} <i class="bi bi-chevron-expand" aria-hidden="true"></i></button></th>
+                        <th class="local_bridge-table-actions-head">
+                            <span class="visually-hidden">{{strings.actions}}</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody data-automation-tbody>
+                    {{> local_bridge/automation_rows}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="local_bridge-datatable-footer" data-table-footer>
+            <div class="local_bridge-datatable-info" data-table-info-bottom></div>
+            <div class="local_bridge-pagination" data-table-pagination></div>
+        </div>
+    </section>
+</section>

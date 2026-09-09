@@ -1,0 +1,160 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_bridge/execution_detail
+
+    Displays the details of an automation execution.
+
+    Context variables required for this template:
+    * execution - Execution details including automation, event, time, status,
+      statuslabel, code, attempts, started, finished, endpoint, payload,
+      payloadjson, response, error and id.
+    * canretry - Whether the execution can be retried.
+    * strings - Localised strings used by the template.
+
+    Example context (json):
+    {
+        "execution": {
+            "automation": "User created webhook",
+            "event": "User created",
+            "time": "06 Sep 2026, 10:30",
+            "status": "success",
+            "statuslabel": "Success",
+            "code": 200,
+            "attempts": 1,
+            "started": "10:30:00",
+            "finished": "10:30:01",
+            "endpoint": "https://example.com/webhook",
+            "payload": "{\"userid\":123}",
+            "payloadjson": "{\n    \"userid\": 123\n}",
+            "response": "{\"success\":true}",
+            "error": "",
+            "id": 42
+        },
+        "canretry": true,
+        "strings": {
+            "executiondetails": "Execution details",
+            "close": "Close",
+            "httpstatus": "HTTP status",
+            "attempts": "Attempts",
+            "ofthree": "of 3",
+            "started": "Started",
+            "finished": "Finished",
+            "destination": "Destination",
+            "copydestination": "Copy destination",
+            "payload": "Payload",
+            "payloadjson": "JSON",
+            "payloadraw": "Raw",
+            "copypayload": "Copy payload",
+            "copy": "Copy",
+            "response": "Response",
+            "error": "Error",
+            "executionid": "Execution ID",
+            "retrydelivery": "Retry delivery"
+        }
+    }
+}}
+
+<div class="local_bridge-execution-detail">
+    <div class="local_bridge-execution-header">
+        <div class="local_bridge-execution-heading">
+            <span class="local_bridge-execution-kicker">{{strings.executiondetails}}</span>
+            <h2 class="local_bridge-execution-title">{{execution.automation}}</h2>
+            <div class="local_bridge-execution-meta">
+                <span class="local_bridge-execution-event-pill"><i class="bi bi-link-45deg" aria-hidden="true"></i>{{execution.event}}</span>
+                <span class="local_bridge-execution-meta-separator">•</span>
+                <span class="local_bridge-execution-time"><i class="bi bi-calendar3" aria-hidden="true"></i>{{execution.time}}</span>
+            </div>
+        </div>
+        <span class="local_bridge-status local_bridge-status-{{execution.status}}"><i></i>{{execution.statuslabel}}</span>
+        <button type="button" class="local_bridge-execution-close" data-execution-close aria-label="{{strings.close}}" title="{{strings.close}}">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div class="local_bridge-detail-grid">
+        <div class="local_bridge-detail-stat">
+            <span class="local_bridge-detail-stat-icon local_bridge-detail-stat-icon-blue"><i class="bi bi-globe2" aria-hidden="true"></i></span>
+            <div><small>{{strings.httpstatus}}</small><b>{{execution.code}}</b></div>
+        </div>
+        <div class="local_bridge-detail-stat">
+            <span class="local_bridge-detail-stat-icon local_bridge-detail-stat-icon-blue"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></span>
+            <div><small>{{strings.attempts}}</small><b>{{execution.attempts}} {{strings.ofthree}}</b></div>
+        </div>
+        <div class="local_bridge-detail-stat">
+            <span class="local_bridge-detail-stat-icon local_bridge-detail-stat-icon-green"><i class="bi bi-play" aria-hidden="true"></i></span>
+            <div><small>{{strings.started}}</small><b>{{execution.started}}</b></div>
+        </div>
+        <div class="local_bridge-detail-stat">
+            <span class="local_bridge-detail-stat-icon local_bridge-detail-stat-icon-red"><i class="bi bi-stop" aria-hidden="true"></i></span>
+            <div><small>{{strings.finished}}</small><b>{{execution.finished}}</b></div>
+        </div>
+    </div>
+
+    {{#execution.endpoint}}
+    <section class="local_bridge-detail-section local_bridge-destination-section">
+        <h3>{{strings.destination}}</h3>
+        <div class="local_bridge-destination-box">
+            <i class="bi bi-link-45deg" aria-hidden="true"></i>
+            <code class="local_bridge-destination-value">{{execution.endpoint}}</code>
+            <button type="button" class="local_bridge-icon-action" data-destination-copy title="{{strings.copydestination}}" aria-label="{{strings.copydestination}}">
+                <i class="bi bi-clipboard" aria-hidden="true"></i>
+            </button>
+        </div>
+    </section>
+    {{/execution.endpoint}}
+
+    <section class="local_bridge-detail-section local_bridge-payload-section">
+        <div class="local_bridge-detail-section-head">
+            <h3>{{strings.payload}}</h3>
+            <div class="local_bridge-payload-actions" role="group" aria-label="{{strings.payload}}">
+                <div class="local_bridge-payload-toggle">
+                    <button type="button" class="local_bridge-payload-view active" data-payload-view="json" aria-pressed="true">{{strings.payloadjson}}</button>
+                    <button type="button" class="local_bridge-payload-view" data-payload-view="raw" aria-pressed="false">{{strings.payloadraw}}</button>
+                </div>
+                <button type="button" class="local_bridge-payload-copy" data-payload-copy title="{{strings.copypayload}}" aria-label="{{strings.copypayload}}">
+                    <i class="bi bi-clipboard" aria-hidden="true"></i><span>{{strings.copy}}</span>
+                </button>
+            </div>
+        </div>
+        <pre class="local_bridge-code-block local_bridge-code-json" data-payload-content data-payload-raw="{{execution.payload}}" data-payload-json="{{execution.payloadjson}}">{{execution.payloadjson}}</pre>
+    </section>
+
+    {{#execution.response}}
+    <section class="local_bridge-detail-section">
+        <h3>{{strings.response}}</h3>
+        <pre class="local_bridge-code-block local_bridge-code-json">{{execution.response}}</pre>
+    </section>
+    {{/execution.response}}
+
+    {{#execution.error}}
+    <section class="local_bridge-detail-section local_bridge-error-state">
+        <h3>{{strings.error}}</h3>
+        <pre class="local_bridge-code-block">{{execution.error}}</pre>
+    </section>
+    {{/execution.error}}
+
+    <div class="local_bridge-execution-footer">
+        <span class="local_bridge-execution-id">{{strings.executionid}}: <b>#{{execution.id}}</b></span>
+        <div class="local_bridge-execution-footer-actions">
+            <button type="button" class="local_bridge-btn local_bridge-btn-secondary" data-execution-close>{{strings.close}}</button>
+            {{#canretry}}
+            <button type="button" class="local_bridge-btn local_bridge-btn-primary" data-action="retry" data-id="{{execution.id}}"><i class="bi bi-arrow-repeat" aria-hidden="true"></i>{{strings.retrydelivery}}</button>
+            {{/canretry}}
+        </div>
+    </div>
+</div>

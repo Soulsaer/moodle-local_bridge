@@ -1,0 +1,233 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    Bridge dashboard.
+
+    @template local_bridge/dashboard
+
+    Example context (json):
+    {
+        "strings": {
+            "overview": "Overview",
+            "activity": "Integration activity",
+            "activitydesc": "Keep an eye on your Moodle connections and deliveries.",
+            "createautomation": "Create automation",
+            "activeautomations": "Active automations",
+            "totalexecutions": "Total executions",
+            "successrate": "Success rate",
+            "faileddeliveries": "Failed deliveries",
+            "recentactivity": "Recent activity",
+            "recentactivitydesc": "Your latest delivery activity.",
+            "viewall": "View all",
+            "nodeliveryactivity": "No delivery activity yet",
+            "nodeliveryactivitydesc": "Once an automation runs, its deliveries will appear here.",
+            "automationhealth": "Automation health",
+            "automationhealthdesc": "Current configuration status.",
+            "active": "Active",
+            "yes": "Yes",
+            "no": "No",
+            "inactive": "Inactive",
+            "ofautomationsactive": "of automations are active",
+            "manageautomations": "Manage automations",
+            "bridgeisready": "Bridge is ready",
+            "bridgeisreadydesc": "Create an automation when you are ready. Deliveries and system activity will appear here as they happen.",
+            "viewexecutions": "View Bridge executions"
+        },
+        "activecount": 3,
+        "totaljobs": 25,
+        "successrate": 92,
+        "failedjobs": 2,
+        "inactivecount": 1,
+        "activepercent": 75,
+        "hasexecutions": true,
+        "executions": [
+            {
+                "id": 1,
+                "event": "User created",
+                "automation": "User webhook",
+                "time": "5 minutes ago",
+                "status": "success",
+                "statuslabel": "Success"
+            }
+        ]
+    }
+}}
+
+<section class="local_bridge-view">
+    <div class="local_bridge-page-head">
+        <div>
+            <span class="local_bridge-kicker">{{strings.overview}}</span>
+            <h1>{{strings.activity}}</h1>
+            <p>{{strings.activitydesc}}</p>
+        </div>
+        <button type="button" class="btn btn-primary local_bridge-btn local_bridge-btn-primary" data-action="create">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            <span>{{strings.createautomation}}</span>
+        </button>
+    </div>
+
+    <div class="local_bridge-metrics">
+        <div class="local_bridge-metric">
+            <span class="local_bridge-metric-icon blue">
+                <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+            </span>
+            <div>
+                <small>{{strings.activeautomations}}</small>
+                <strong>{{activecount}}</strong>
+            </div>
+        </div>
+
+        <div class="local_bridge-metric">
+            <span class="local_bridge-metric-icon purple">
+                <i class="bi bi-send" aria-hidden="true"></i>
+            </span>
+            <div>
+                <small>{{strings.totalexecutions}}</small>
+                <strong>{{totaljobs}}</strong>
+            </div>
+        </div>
+
+        <div class="local_bridge-metric">
+            <span class="local_bridge-metric-icon green">
+                <i class="bi bi-check2-circle" aria-hidden="true"></i>
+            </span>
+            <div>
+                <small>{{strings.successrate}}</small>
+                <strong>{{successrate}}%</strong>
+            </div>
+        </div>
+
+        <div class="local_bridge-metric">
+            <span class="local_bridge-metric-icon red">
+                <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+            </span>
+            <div>
+                <small>{{strings.faileddeliveries}}</small>
+                <strong>{{failedjobs}}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="local_bridge-grid local_bridge-grid-main">
+        <section class="local_bridge-card">
+            <div class="local_bridge-card-head">
+                <div>
+                    <h2>{{strings.recentactivity}}</h2>
+                    <p>{{strings.recentactivitydesc}}</p>
+                </div>
+                <button type="button" class="local_bridge-link-button" data-view="executions">
+                    {{strings.viewall}}
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            {{#hasexecutions}}
+            <div class="local_bridge-activity-list">
+                {{#executions}}
+                <button type="button" class="local_bridge-activity-row" data-action="execution" data-id="{{id}}">
+                    <span class="local_bridge-activity-icon">
+                        <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+                    </span>
+                    <span class="local_bridge-activity-copy">
+                        <b>{{event}}</b>
+                        <small>{{automation}} · {{time}}</small>
+                    </span>
+                    <span class="local_bridge-status local_bridge-status-{{status}}">
+                        <i></i>{{statuslabel}}
+                    </span>
+                    <span class="local_bridge-row-arrow">
+                        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                    </span>
+                </button>
+                {{/executions}}
+            </div>
+            {{/hasexecutions}}
+
+            {{^hasexecutions}}
+            <div class="local_bridge-empty local_bridge-empty-compact">
+                <span class="local_bridge-empty-icon">
+                    <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+                </span>
+                <h3>{{strings.nodeliveryactivity}}</h3>
+                <p>{{strings.nodeliveryactivitydesc}}</p>
+                <button type="button" class="btn btn-light border local_bridge-btn local_bridge-btn-secondary" data-action="create">
+                    {{strings.createautomation}}
+                </button>
+            </div>
+            {{/hasexecutions}}
+        </section>
+
+        <aside class="local_bridge-card local_bridge-health-card">
+            <div class="local_bridge-card-head">
+                <div>
+                    <h2>{{strings.automationhealth}}</h2>
+                    <p>{{strings.automationhealthdesc}}</p>
+                </div>
+            </div>
+
+            <div class="local_bridge-health-chart" data-health-chart-wrap>
+                <canvas data-health-chart role="img" aria-label="{{strings.automationhealth}}"></canvas>
+                <div class="local_bridge-health-chart-center">
+                    <strong>{{activecount}}</strong>
+                    <span>{{strings.active}}</span>
+                </div>
+            </div>
+
+            <div class="local_bridge-health-stats">
+                <span class="local_bridge-health-yes">
+                    <i class="local_bridge-dot green"></i>
+                    <b>{{strings.yes}}</b>
+                    <em>{{activecount}} {{strings.active}}</em>
+                </span>
+                <span class="local_bridge-health-no">
+                    <i class="local_bridge-dot red"></i>
+                    <b>{{strings.no}}</b>
+                    <em>{{inactivecount}} {{strings.inactive}}</em>
+                </span>
+            </div>
+
+            <div class="local_bridge-health-caption">
+                {{activepercent}}% {{strings.ofautomationsactive}}
+            </div>
+
+            <button type="button" class="btn btn-primary local_bridge-btn local_bridge-btn-primary local_bridge-btn-block" data-view="automations">
+                {{strings.manageautomations}}
+            </button>
+        </aside>
+    </div>
+
+    <section class="local_bridge-card local_bridge-status-card">
+        <div class="local_bridge-start-icon">
+            <i class="bi bi-check-circle" aria-hidden="true"></i>
+        </div>
+        <div class="local_bridge-status-copy">
+            <h2>{{strings.bridgeisready}}</h2>
+            <p>{{strings.bridgeisreadydesc}}</p>
+        </div>
+        <div class="local_bridge-status-actions">
+            <button type="button" class="btn btn-light border local_bridge-btn local_bridge-btn-secondary" data-view="executions">
+                <i class="bi bi-clock-history" aria-hidden="true"></i>
+                <span>{{strings.viewexecutions}}</span>
+            </button>
+            <button type="button" class="btn btn-primary local_bridge-btn local_bridge-btn-primary" data-action="create">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                <span>{{strings.createautomation}}</span>
+            </button>
+        </div>
+    </section>
+</section>

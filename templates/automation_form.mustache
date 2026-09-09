@@ -1,0 +1,200 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+}}
+
+{{!
+    Automation form.
+
+    @template local_bridge/automation_form
+
+    Example context (json):
+    {
+        "editing": false,
+        "strings": {
+            "back": "Back",
+            "newautomation": "New automation",
+            "createanautomation": "Create an automation",
+            "setautomationdesc": "Set what should start the automation and where Bridge should send it.",
+            "nameit": "Name it",
+            "nameitdesc": "Use a short name you will recognise later.",
+            "automationname": "Automation name",
+            "choosewhatstarts": "Choose what starts it",
+            "choosestartsdesc": "Bridge will listen for this Moodle event.",
+            "choosewhere": "Choose where it goes",
+            "choosewheredesc": "Enter the HTTPS endpoint that should receive the event.",
+            "destinationurl": "Destination URL",
+            "endpointplaceholder": "https://example.com/webhooks/moodle",
+            "destinationhelp": "Bridge sends a JSON POST request when the event occurs.",
+            "advancedoptions": "Advanced delivery options",
+            "signingsecretoptional": "Signing secret",
+            "optional": "Optional",
+            "signingsecretplaceholder": "Leave empty to disable signing",
+            "signingsecrethelp": "When set, Bridge adds an HMAC-SHA256 signature header to each request.",
+            "enableafter": "Enable automation after saving",
+            "cancel": "Cancel",
+            "savechanges": "Save changes",
+            "createautomation": "Create automation",
+            "testbefore": "Test before you go live",
+            "testbeforedesc": "Bridge will send a safe test event to the configured destination.",
+            "sendtest": "Send test"
+        },
+        "automation": {
+            "id": 1,
+            "name": "Example automation",
+            "endpoint": "https://example.com/webhooks/moodle",
+            "enabled": true
+        },
+        "events": [
+            {
+                "name": "\\core\\event\\user_created",
+                "label": "User created",
+                "description": "A new Moodle user is created.",
+                "icon": "bi-person-plus",
+                "selected": true
+            }
+        ]
+    }
+}}
+
+<section class="local_bridge-view local_bridge-form-view">
+    <div class="local_bridge-page-head">
+        <div>
+            <button type="button" class="local_bridge-back" data-view="automations">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i> {{strings.back}}
+            </button>
+            <span class="local_bridge-kicker">
+                {{#editing}}{{strings.editautomation}}{{/editing}}
+                {{^editing}}{{strings.newautomation}}{{/editing}}
+            </span>
+            <h1>
+                {{#editing}}{{strings.updateautomation}}{{/editing}}
+                {{^editing}}{{strings.createanautomation}}{{/editing}}
+            </h1>
+            <p>{{strings.setautomationdesc}}</p>
+        </div>
+    </div>
+
+    <form class="local_bridge-form container-fluid px-0" data-automation-form novalidate>
+        <div class="local_bridge-form-section row g-0">
+            <div class="local_bridge-form-step">1</div>
+            <div class="local_bridge-form-section-body col">
+                <h2>{{strings.nameit}}</h2>
+                <p>{{strings.nameitdesc}}</p>
+                <label class="local_bridge-field">
+                    <span>{{strings.automationname}}</span>
+                    <input name="name" type="text" value="{{automation.name}}" maxlength="255"
+                        placeholder="{{strings.automationname}}" required>
+                    <small class="local_bridge-field-error" data-error="name"></small>
+                </label>
+            </div>
+        </div>
+
+        <div class="local_bridge-form-section row g-0">
+            <div class="local_bridge-form-step">2</div>
+            <div class="local_bridge-form-section-body col">
+                <h2>{{strings.choosewhatstarts}}</h2>
+                <p>{{strings.choosestartsdesc}}</p>
+                <div class="local_bridge-event-picker">
+                    {{#events}}
+                    <label class="local_bridge-event-option">
+                        <input type="radio" name="eventname" value="{{name}}" {{#selected}}checked{{/selected}}>
+                        <span class="local_bridge-event-option-icon">
+                            <i class="bi {{icon}}" aria-hidden="true"></i>
+                        </span>
+                        <span>
+                            <b>{{label}}</b>
+                            <small>{{description}}</small>
+                        </span>
+                    </label>
+                    {{/events}}
+                </div>
+                <small class="local_bridge-field-error" data-error="eventname"></small>
+            </div>
+        </div>
+
+        <div class="local_bridge-form-section row g-0">
+            <div class="local_bridge-form-step">3</div>
+            <div class="local_bridge-form-section-body col">
+                <h2>{{strings.choosewhere}}</h2>
+                <p>{{strings.choosewheredesc}}</p>
+                <label class="local_bridge-field">
+                    <span>{{strings.destinationurl}}</span>
+                    <input name="endpoint" type="url" value="{{automation.endpoint}}"
+                        placeholder="{{strings.endpointplaceholder}}" required>
+                    <small>{{strings.destinationhelp}}</small>
+                    <small class="local_bridge-field-error" data-error="endpoint"></small>
+                </label>
+
+                <div class="local_bridge-advanced">
+                    <button type="button" data-toggle-advanced aria-expanded="false">
+                        <span class="local_bridge-advanced-label">
+                            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                            <span>{{strings.advancedoptions}}</span>
+                        </span>
+                        <i class="bi bi-chevron-down local_bridge-advanced-chevron" aria-hidden="true"></i>
+                    </button>
+                    <div class="local_bridge-advanced-body" hidden>
+                        <label class="local_bridge-field">
+                            <span>
+                                {{strings.signingsecretoptional}}
+                                <em>{{strings.optional}}</em>
+                            </span>
+                            <input name="secret" type="password" value="" autocomplete="new-password"
+                                placeholder="{{strings.signingsecretplaceholder}}">
+                            <small>{{strings.signingsecrethelp}}</small>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="local_bridge-form-footer">
+            <div class="form-check d-flex align-items-center gap-2">
+                <input class="form-check-input m-0" type="checkbox" name="enabled" id="local_bridge-enabled"
+                    {{#automation.enabled}}checked{{/automation.enabled}}
+                    {{^editing}}{{^automation.enabled}}checked{{/automation.enabled}}{{/editing}}>
+                <label class="form-check-label local_bridge-check-label" for="local_bridge-enabled">
+                    {{strings.enableafter}}
+                </label>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-light border local_bridge-btn local_bridge-btn-secondary"
+                    data-view="automations">{{strings.cancel}}</button>
+                <button type="submit" class="btn btn-primary local_bridge-btn local_bridge-btn-primary">
+                    {{#editing}}{{strings.savechanges}}{{/editing}}
+                    {{^editing}}{{strings.createautomation}}{{/editing}}
+                </button>
+            </div>
+        </div>
+
+        <input type="hidden" name="id" value="{{automation.id}}">
+    </form>
+
+    {{#editing}}
+    <div class="local_bridge-test-panel">
+        <div>
+            <b>{{strings.testbefore}}</b>
+            <p>{{strings.testbeforedesc}}</p>
+        </div>
+        <button type="button" class="btn btn-outline-primary local_bridge-btn local_bridge-btn-secondary"
+            data-action="test" data-id="{{automation.id}}">
+            <i class="bi bi-send" aria-hidden="true"></i>
+            <span>{{strings.sendtest}}</span>
+        </button>
+    </div>
+    {{/editing}}
+</section>

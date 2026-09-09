@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<libraries>
+    <library>
+        <location>thirdparty/bootstrap-icons/</location>
+        <name>Bootstrap Icons</name>
+        <version>1.13.1</version>
+        <license>MIT</license>
+        <licenseversion></licenseversion>
+    </library>
+</libraries>

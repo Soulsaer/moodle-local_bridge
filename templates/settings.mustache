@@ -1,0 +1,85 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_bridge/settings
+
+    Displays the Bridge settings overview.
+
+    Context variables required for this template:
+    * strings - Localised strings used by the template.
+    * eventcount - Number of supported Moodle events.
+
+    Example context (json):
+    {
+        "eventcount": 12,
+        "strings": {
+            "settings": "Settings",
+            "manageautomations": "Manage your automation settings.",
+            "deliveryprocessing": "Delivery processing",
+            "deliveryprocessingdesc": "Automation deliveries are processed automatically.",
+            "active": "Active",
+            "automaticretries": "Automatic retries",
+            "automaticretriesdesc": "Failed deliveries are retried automatically.",
+            "enabled": "Enabled",
+            "supportedtriggers": "Supported triggers",
+            "moodleeventsavailable": "Moodle events available",
+            "events": "events"
+        }
+    }
+}}
+
+<section class="local_bridge-view">
+    <div class="local_bridge-page-head">
+        <div>
+            <span class="local_bridge-kicker">{{strings.settings}}</span>
+            <h1>{{strings.settings}}</h1>
+            <p>{{strings.manageautomations}}</p>
+        </div>
+    </div>
+
+    <div class="local_bridge-card local_bridge-settings-card">
+        <div class="local_bridge-setting-row">
+            <div>
+                <b>{{strings.deliveryprocessing}}</b>
+                <p>{{strings.deliveryprocessingdesc}}</p>
+            </div>
+            <span class="local_bridge-status local_bridge-status-success">
+                <i></i>{{strings.active}}
+            </span>
+        </div>
+
+        <div class="local_bridge-setting-row">
+            <div>
+                <b>{{strings.automaticretries}}</b>
+                <p>{{strings.automaticretriesdesc}}</p>
+            </div>
+            <span class="local_bridge-status local_bridge-status-success">
+                <i></i>{{strings.enabled}}
+            </span>
+        </div>
+
+        <div class="local_bridge-setting-row">
+            <div>
+                <b>{{strings.supportedtriggers}}</b>
+                <p>{{eventcount}} {{strings.moodleeventsavailable}}</p>
+            </div>
+            <span class="local_bridge-chip">
+                {{eventcount}} {{strings.events}}
+            </span>
+        </div>
+    </div>
+</section>

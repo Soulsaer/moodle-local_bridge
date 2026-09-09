@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/bridge/db" VERSION="2026082900" COMMENT="XMLDB file for Bridge plugin"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd">
+    <TABLES>
+        <TABLE NAME="local_bridge_automation" COMMENT="Bridge automation definitions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="eventname" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="endpoint" TYPE="text" NOTNULL="true"/>
+                <FIELD NAME="secret" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="eventname" UNIQUE="false" FIELDS="eventname"/>
+                <INDEX NAME="enabled" UNIQUE="false" FIELDS="enabled"/>
+            </INDEXES>
+        </TABLE>
+        <TABLE NAME="local_bridge_job" COMMENT="Bridge event delivery jobs and execution history">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+                <FIELD NAME="automationid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="eventname" TYPE="char" LENGTH="255" NOTNULL="true"/>
+                <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="payload" TYPE="text" NOTNULL="true"/>
+                <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true"/>
+                <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="nextrun" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="timestarted" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="timefinished" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="responsecode" TYPE="int" LENGTH="5" NOTNULL="false"/>
+                <FIELD NAME="response" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="error" TYPE="text" NOTNULL="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="automationid" UNIQUE="false" FIELDS="automationid"/>
+                <INDEX NAME="status_nextrun" UNIQUE="false" FIELDS="status,nextrun"/>
+                <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

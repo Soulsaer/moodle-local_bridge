@@ -1,0 +1,147 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_bridge/executions
+
+    Displays the automation delivery history.
+
+    Context variables required for this template:
+    * strings - Localised strings used by the template.
+    * search - Current delivery search value.
+    * executions - List of execution records passed to the execution_rows partial.
+
+    Example context (json):
+    {
+        "search": "",
+        "executions": [
+            {
+                "id": 42,
+                "event": "User created",
+                "automation": "User created webhook",
+                "status": "success",
+                "statuslabel": "Success",
+                "error": "",
+                "code": 200,
+                "attempts": 1,
+                "time": "06 Sep 2026, 10:30"
+            }
+        ],
+        "strings": {
+            "executions": "Executions",
+            "deliveryhistory": "Delivery history",
+            "deliveryhistorydesc": "View the history of automation deliveries.",
+            "searchdeliveries": "Search deliveries",
+            "rows": "Rows",
+            "rowsperpage": "Rows per page",
+            "event": "Event",
+            "automation": "Automation",
+            "result": "Result",
+            "httpstatus": "HTTP status",
+            "attempts": "Attempts",
+            "time": "Time"
+        }
+    }
+}}
+
+<section class="local_bridge-view">
+    <div class="local_bridge-page-head">
+        <div>
+            <span class="local_bridge-kicker">{{strings.executions}}</span>
+            <h1>{{strings.deliveryhistory}}</h1>
+            <p>{{strings.deliveryhistorydesc}}</p>
+        </div>
+    </div>
+
+    <div class="local_bridge-toolbar">
+        <label class="local_bridge-search">
+            <span><i class="bi bi-search" aria-hidden="true"></i></span>
+            <input type="search" data-execution-search value="{{search}}"
+                placeholder="{{strings.searchdeliveries}}"
+                aria-label="{{strings.searchdeliveries}}">
+        </label>
+    </div>
+
+    <div class="local_bridge-card local_bridge-table-card local_bridge-datatable-card" data-execution-table-card>
+        <div class="local_bridge-datatable-toolbar">
+            <div class="local_bridge-datatable-info" data-execution-info></div>
+            <div class="local_bridge-datatable-page-size">
+                <label>
+                    {{strings.rows}}
+                    <select data-execution-page-size aria-label="{{strings.rowsperpage}}">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+
+        <div class="local_bridge-table-wrap">
+            <table class="table local_bridge-table local_bridge-datatable local_bridge-executions-table"
+                data-execution-table>
+                <thead>
+                    <tr>
+                        <th data-execution-sort-key="event">
+                            <button type="button" class="local_bridge-th-sort">
+                                {{strings.event}}
+                                <i class="bi bi-chevron-expand" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th data-execution-sort-key="automation">
+                            <button type="button" class="local_bridge-th-sort">
+                                {{strings.automation}}
+                                <i class="bi bi-chevron-expand" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th data-execution-sort-key="status">
+                            <button type="button" class="local_bridge-th-sort">
+                                {{strings.result}}
+                                <i class="bi bi-chevron-expand" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th data-execution-sort-key="http">
+                            <button type="button" class="local_bridge-th-sort">
+                                {{strings.httpstatus}}
+                                <i class="bi bi-chevron-expand" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th data-execution-sort-key="attempts">
+                            <button type="button" class="local_bridge-th-sort">
+                                {{strings.attempts}}
+                                <i class="bi bi-chevron-expand" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                        <th data-execution-sort-key="time">
+                            <button type="button" class="local_bridge-th-sort">
+                                {{strings.time}}
+                                <i class="bi bi-chevron-expand" aria-hidden="true"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody data-execution-tbody>
+                    {{> local_bridge/execution_rows}}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="local_bridge-datatable-footer" data-execution-table-footer>
+            <div class="local_bridge-datatable-info" data-execution-info-bottom></div>
+            <div class="local_bridge-pagination" data-execution-pagination></div>
+        </div>
+    </div>
+</section>
