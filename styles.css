@@ -846,34 +846,21 @@
 }
 
 .local_bridge-form-section {
-    display: flex;
-    gap: 17px;
-    padding: 23px 25px;
+    display: block;
+    width: 100%;
+    padding: 26px 28px;
     border: 1px solid var(--b-line);
     border-bottom: 0;
     background: #fff;
 }
 
-.local_bridge-form-section:first-child {
+.local_bridge-form-section:first-of-type {
     border-radius: 16px 16px 0 0;
 }
 
-.local_bridge-form-section:nth-last-of-type(1) {
+.local_bridge-form-section:last-of-type {
     border-bottom: 1px solid var(--b-line);
     border-radius: 0 0 16px 16px;
-}
-
-.local_bridge-form-step {
-    width: 28px;
-    height: 28px;
-    display: grid;
-    place-items: center;
-    flex: none;
-    border-radius: 9px;
-    background: #edf3ff;
-    color: var(--b-primary);
-    font-size: 10px;
-    font-weight: 850;
 }
 
 .local_bridge-form-section-body {
@@ -4658,4 +4645,81 @@
     border-color: #dbe3ef;
     opacity: 1;
     visibility: visible;
+}
+
+/* 0.3.24: keep test-delivery controls readable across Moodle theme hover styles. */
+.local_bridge-app .local_bridge-test-panel [data-action="test"],
+.local_bridge-app .local_bridge-test-panel [data-action="test"]:visited {
+    color: var(--b-primary);
+    background: #fff;
+    border-color: var(--b-primary);
+    opacity: 1;
+    text-decoration: none;
+}
+
+.local_bridge-app .local_bridge-test-panel [data-action="test"]:hover,
+.local_bridge-app .local_bridge-test-panel [data-action="test"]:focus-visible {
+    color: var(--b-primary-dark);
+    background: #edf3ff;
+    border-color: var(--b-primary-dark);
+    box-shadow: 0 0 0 3px rgba(59, 111, 245, .12);
+}
+
+.local_bridge-app .local_bridge-test-panel [data-action="test"]:disabled {
+    color: var(--b-primary);
+    background: #fff;
+    opacity: .65;
+}
+
+.local_bridge-modal button.local_bridge-modal-done,
+.local_bridge-modal button.local_bridge-modal-done.btn,
+.local_bridge-modal button.local_bridge-modal-done.btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 12px 20px;
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    background: #1769c2;
+    background-color: #1769c2;
+    background-image: none;
+    border: 1px solid #1769c2;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    text-indent: 0;
+    opacity: 1;
+    visibility: visible;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(23, 105, 194, .18);
+    cursor: pointer;
+}
+
+.local_bridge-modal button.local_bridge-modal-done:hover,
+.local_bridge-modal button.local_bridge-modal-done:focus,
+.local_bridge-modal button.local_bridge-modal-done:focus-visible,
+.local_bridge-modal button.local_bridge-modal-done:active {
+    color: #fff;
+    -webkit-text-fill-color: #fff;
+    background: #1257a3;
+    background-color: #1257a3;
+    border-color: #1257a3;
+}
+
+.local_bridge-modal-response pre {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    max-height: 190px;
+    overflow: auto;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    tab-size: 2;
+    line-height: 1.6;
 }

@@ -33,7 +33,6 @@ $PAGE->set_context($context);
 $PAGE->set_title(get_string('pluginname', 'local_bridge'));
 $PAGE->set_heading(get_string('pluginname', 'local_bridge'));
 $PAGE->requires->css(new moodle_url('/local/bridge/thirdparty/bootstrap-icons/bootstrap-icons.min.css'));
-$PAGE->requires->css(new moodle_url('/local/bridge/styles.css'));
 $PAGE->requires->js_call_amd('local_bridge/app', 'init');
 
 $plugininfo = core_plugin_manager::instance()->get_plugin_info('local_bridge');

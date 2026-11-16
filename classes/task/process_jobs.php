@@ -32,7 +32,7 @@ class process_jobs extends \core\task\scheduled_task {
      * @return string Task name.
      */
     public function get_name(): string {
-        return get_string('pluginname', 'local_bridge') . ': process deliveries';
+        return get_string('processtask', 'local_bridge');
     }
 
     /**

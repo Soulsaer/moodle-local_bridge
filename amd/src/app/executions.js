@@ -38,19 +38,20 @@ define([
         fetchExecutions: function(initial) {
             const state = this.executionTable;
             const requestId = ++this.executionRequestId;
+            let initialData = null;
+
             if (!initial) {
                 state.loading = true;
                 this.setExecutionTableLoading(true);
             }
 
-            const request = Promise.resolve(this.call('local_bridge_get_executions', {
+            return Promise.resolve(this.call('local_bridge_get_executions', {
                 page: state.page,
                 perpage: state.pageSize,
                 search: state.query,
                 sortkey: state.sortKey,
                 sortdir: state.sortDir
-            }));
-            return request.then((data) => {
+            })).then((data) => {
                 if (requestId !== this.executionRequestId) {
                     return null;
                 }
@@ -65,23 +66,36 @@ define([
                     data.firstpage = currentPage <= 0;
                     data.lastpage = currentPage >= lastPage;
                     this.executionInitialData = data;
-
-                    return this.render('local_bridge/executions', data);
+                    initialData = data;
+                    return data;
                 }
 
                 return this.updateExecutionTable(data);
-            }).finally(() => {
+            }).then(() => {
+                if (initialData) {
+                    return this.render('local_bridge/executions', initialData);
+                }
+                return null;
+            }).then(() => {
+                if (initialData && requestId === this.executionRequestId) {
+                    this.bindExecutionTable();
+                    this.updateExecutionMeta(initialData);
+                }
+                return null;
+            }).catch((error) => {
+                Notification.exception(error);
+                return null;
+            }).then(() => {
                 if (requestId === this.executionRequestId) {
                     state.loading = false;
                     this.setExecutionTableLoading(false);
                 }
-            }).catch(Notification.exception);
+                return null;
+            });
         },
 
         refreshExecutions: function() {
-            if (this.executionTable.loading) {
-                return;
-            }
+            // Request IDs prevent stale responses; allow newer searches to supersede in-flight requests.
             this.fetchExecutions(false);
         },
 
@@ -377,7 +391,7 @@ define([
                 if (copied) {
                     resolve();
                 } else {
-                    reject(new Error('Clipboard copy failed'));
+                    reject(new Error(this.strings.clipboardcopyfailed));
                 }
             });
         },
