@@ -56,7 +56,7 @@ define([
         'testneedsattention', 'successfulresponse', 'requestreturnederror', 'nohttpresponse',
         'responsebody', 'noresponsebody', 'done', 'deleteconfirmtitle', 'deleteconfirmmessage',
         'deleteconfirmyes', 'deleteconfirmno', 'unabletosave', 'loading', 'httpstatus', 'result',
-        'execution', 'executiondetails', 'executionid', 'ofthree', 'copy', 'copydestination',
+        'execution', 'executiondetails', 'executionid', 'ofthree', 'copy', 'clipboardcopyfailed', 'copydestination',
         'started', 'finished', 'retrydelivery', 'payload', 'payloadraw', 'payloadjson', 'copypayload',
         'payloadcopied', 'urlcopied', 'response', 'error', 'close', 'event', 'time', 'attempts',
         'status', 'on', 'off', 'viewall', 'viewexecutions', 'managebridge', 'back', 'cancel',

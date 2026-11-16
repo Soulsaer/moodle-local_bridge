@@ -1,0 +1,54 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    @template local_bridge/test_result
+
+    Displays the result of a test webhook delivery.
+
+    Example context (json):
+    {
+        "success": true,
+        "successicon": true,
+        "erroricon": false,
+        "title": "Test delivery successful",
+        "message": "The endpoint accepted the test delivery.",
+        "code": 200,
+        "statusText": "Success",
+        "hasresponse": true,
+        "response": "{\"ok\":true}",
+        "strings": {
+            "close": "Close",
+            "httpstatus": "HTTP status",
+            "result": "Result",
+            "responsebody": "Response body",
+            "noresponsebody": "No response body",
+            "done": "Done"
+        }
+    }
+}}
+<div class="local_bridge-modal">
+    <button type="button" class="local_bridge-modal-close" aria-label="{{strings.close}}">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
+    <span class="local_bridge-result-icon {{#success}}local_bridge-success{{/success}}{{^success}}local_bridge-error-state{{/success}}">
+        {{#successicon}}<i class="bi bi-check-lg" aria-hidden="true"></i>{{/successicon}}
+        {{#erroricon}}<i class="bi bi-exclamation-lg" aria-hidden="true"></i>{{/erroricon}}
+    </span>
+    <h2>{{title}}</h2>
+    <p>{{message}}</p>
+    <div class="local_bridge-result-meta">
+        <span><span>{{strings.httpstatus}}</span><b>{{code}}</b></span>
+        <span><span>{{strings.result}}</span><b>{{statusText}}</b></span>
+    </div>
+    <div class="local_bridge-modal-response">
+        <span class="local_bridge-modal-response-label">{{strings.responsebody}}</span>
+        {{#hasresponse}}<pre>{{response}}</pre>{{/hasresponse}}
+        {{^hasresponse}}<p class="local_bridge-modal-empty-response">{{strings.noresponsebody}}</p>{{/hasresponse}}
+    </div>
+    <button type="button" class="btn btn-primary local_bridge-btn local_bridge-btn-primary local_bridge-btn-block local_bridge-modal-done">{{strings.done}}</button>
+</div>

@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_bridge';
-$plugin->version   = 2026090601;
+$plugin->version   = 2026092401;
 $plugin->requires  = 2024100700;
 $plugin->maturity  = MATURITY_ALPHA;
-$plugin->release   = '0.3.23';
+$plugin->release   = '0.4.0';

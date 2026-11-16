@@ -36,6 +36,7 @@ define([
         fetchAutomations: function(initial) {
             const state = this.automationTable;
             const requestId = ++this.automationRequestId;
+            let initialData = null;
 
             if (!initial) {
                 state.loading = true;
@@ -56,11 +57,24 @@ define([
                 if (initial) {
                     state.page = Number(data.page) || 0;
                     state.pageSize = Number(data.perpage) || state.pageSize;
+                    data.search = state.query;
                     this.automationInitialData = data;
-                    return this.render('local_bridge/automations', data);
+                    initialData = data;
+                    return data;
                 }
 
                 return this.updateAutomationTable(data);
+            }).then(() => {
+                if (initialData) {
+                    return this.render('local_bridge/automations', initialData);
+                }
+                return null;
+            }).then(() => {
+                if (initialData && requestId === this.automationRequestId) {
+                    this.bindAutomationTable();
+                    this.updateAutomationMeta(initialData);
+                }
+                return null;
             }).catch((error) => {
                 if (requestId === this.automationRequestId) {
                     state.loading = false;
@@ -80,9 +94,7 @@ define([
         },
 
         refreshAutomations: function() {
-            if (this.automationTable.loading) {
-                return;
-            }
+            // Request IDs prevent stale responses; allow newer searches to supersede in-flight requests.
             this.fetchAutomations(false);
         },
 
@@ -408,67 +420,45 @@ define([
             let statusText = this.strings.nohttpresponse;
 
             if (code) {
-                if (code >= 200 && code < 300) {
-                    statusText = this.strings.successfulresponse;
-                } else {
-                    statusText = this.strings.requestreturnederror;
-                }
+                statusText = code >= 200 && code < 300
+                    ? this.strings.successfulresponse
+                    : this.strings.requestreturnederror;
             }
-            const responseMarkup = response
-                ? '<div class="local_bridge-modal-response">' +
-                    '<span class="local_bridge-modal-response-label">' +
-                    this.escape(this.strings.responsebody) +
-                    '</span><pre>' +
-                    this.escape(response) +
-                    '</pre></div>'
-                : '<div class="local_bridge-modal-response">' +
-                    '<span class="local_bridge-modal-response-label">' +
-                    this.escape(this.strings.responsebody) +
-                    '</span><p class="local_bridge-modal-empty-response">' +
-                    this.escape(this.strings.noresponsebody) +
-                    '</p></div>';
-            overlay.innerHTML = '<div class="local_bridge-modal">' +
-                '<button type="button" class="local_bridge-modal-close" aria-label="' +
-                    this.escape(this.strings.close) +
-                    '"><i class="bi bi-x-lg" aria-hidden="true"></i></button>' +
-                '<span class="local_bridge-result-icon ' +
-                    (data.success ? 'local_bridge-success' : 'local_bridge-error-state') +
-                    '"><i class="bi ' +
-                    (data.success ? 'bi-check-lg' : 'bi-exclamation-lg') +
-                    '" aria-hidden="true"></i></span>' +
-                '<h2>' + this.escape(data.success ? this.strings.testdelivered : this.strings.testneedsattention) + '</h2>' +
-                '<p>' + this.escape(data.message) + '</p>' +
-                '<div class="local_bridge-result-meta">' +
-                    '<span><span>' +
-                    this.escape(this.strings.httpstatus) +
-                    '</span><b>' +
-                    this.escape(String(code || this.strings.notavailable)) +
-                    '</b></span><span><span>' +
-                    this.escape(this.strings.result) +
-                    '</span><b>' +
-                    this.escape(statusText) +
-                    '</b></span></div>' +
-                responseMarkup +
-                '<button type="button" class="btn btn-primary local_bridge-btn ' +
-                    'local_bridge-btn-primary local_bridge-btn-block local_bridge-modal-done">' +
-                    this.escape(this.strings.done) +
-                    '</button>' +
-                '</div>';
-            document.body.appendChild(overlay);
-            const close = () => {
-                overlay.remove();
 
-                if (onClose) {
-                    onClose();
-                }
+            const context = {
+                success: Boolean(data.success),
+                successicon: Boolean(data.success),
+                erroricon: !data.success,
+                hasresponse: Boolean(response),
+                message: data.message || '',
+                response: response,
+                code: String(code || this.strings.notavailable),
+                statusText: statusText,
+                title: data.success ? this.strings.testdelivered : this.strings.testneedsattention,
+                strings: this.strings
             };
-            overlay.querySelector('.local_bridge-modal-close').addEventListener('click', close);
-            overlay.querySelector('.local_bridge-modal-done').addEventListener('click', close);
-            overlay.addEventListener('click', (event) => {
-                if (event.target === overlay) {
-                    close();
-                }
-            });
+
+            Templates.render('local_bridge/test_result', context).then((html) => {
+                overlay.innerHTML = html;
+                document.body.appendChild(overlay);
+
+                const close = () => {
+                    overlay.remove();
+                    if (onClose) {
+                        onClose();
+                    }
+                };
+
+                overlay.querySelector('.local_bridge-modal-close').addEventListener('click', close);
+                overlay.querySelector('.local_bridge-modal-done').addEventListener('click', close);
+                overlay.addEventListener('click', (event) => {
+                    if (event.target === overlay) {
+                        close();
+                    }
+                });
+
+                return overlay;
+            }).catch(Notification.exception);
         }
     };
 });
